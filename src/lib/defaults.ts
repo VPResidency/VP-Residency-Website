@@ -324,6 +324,7 @@ export const DEFAULTS = {
       'VP Residency is a clean, family-friendly lodge on Trichy Main Road near Perambalur New Bus Stand. Air-conditioned rooms, free Wi-Fi, free parking and a 24-hour front desk. Call +91 93426 56588.',
     ogImage: '/brand/og-image.jpg',
     googleVerification: '',
+    verifiedByDns: false,
     bingVerification: '',
     ga4Id: '',
     allowIndexing: true,

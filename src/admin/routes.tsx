@@ -316,7 +316,7 @@ admin.get('/', async (c) => {
   const roomsWithoutPhotos = roomsRows.results.filter((r) => !(parseJson<{ images?: string[] }>(r.data, {}).images || []).length).length;
   const checklist: { done: boolean; label: string; href: string }[] = [
     { done: !!s.seo.siteUrl, label: 'Add your live website address (for Google & sharing)', href: '/admin/settings/seo' },
-    { done: !!verificationCode(s.seo.googleVerification), label: 'Verify the site in Google Search Console', href: '/admin/settings/seo' },
+    { done: s.seo.verifiedByDns || !!verificationCode(s.seo.googleVerification), label: 'Verify the site in Google Search Console', href: '/admin/settings/seo' },
     { done: /^G-/.test(s.seo.ga4Id), label: 'Connect Google Analytics (optional)', href: '/admin/settings/seo' },
     { done: roomsWithoutPhotos === 0, label: 'Every published room has photos', href: '/admin/rooms' },
     { done: s.booking.otas.some((o) => o.url), label: 'Add your Agoda / MakeMyTrip / Goibibo links', href: '/admin/settings/booking' },
@@ -429,7 +429,7 @@ admin.get('/', async (c) => {
             </li>
           </ol>
           <p class="muted">
-            Status: {verificationCode(s.seo.googleVerification) ? 'verification tag added ✓' : 'verification tag not added yet'}
+            Status: {s.seo.verifiedByDns ? 'verified with a DNS record ✓' : verificationCode(s.seo.googleVerification) ? 'verification tag added ✓' : 'not verified yet'}
           </p>
         </Card>
       </div>

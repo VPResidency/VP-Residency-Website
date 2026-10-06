@@ -552,6 +552,7 @@ export const SETTINGS_FORMS: Record<SettingsKey, SettingsForm> = {
       ] },
       { title: 'Search Console & Bing verification', desc: 'Choose the "HTML tag" method and paste the whole tag or just its content value.', fields: [
         { k: 'googleVerification', t: 'text', label: 'Google Search Console code', max: 200 },
+        { k: 'verifiedByDns', t: 'toggle', label: 'Already verified with a DNS (TXT) record — no code needed' },
         { k: 'bingVerification', t: 'text', label: 'Bing Webmaster code', max: 200 },
       ] },
       { title: 'Analytics', fields: [
