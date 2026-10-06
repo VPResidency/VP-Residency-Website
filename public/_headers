@@ -1,0 +1,9 @@
+/assets/*
+  Cache-Control: public, max-age=86400
+  X-Content-Type-Options: nosniff
+/images/*
+  Cache-Control: public, max-age=2592000
+  X-Content-Type-Options: nosniff
+/brand/*
+  Cache-Control: public, max-age=2592000
+  X-Content-Type-Options: nosniff
