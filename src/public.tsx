@@ -7,6 +7,7 @@ import { absUrl, breadcrumbJsonLd, siteOrigin, type Meta } from './lib/seo';
 import { activeFestival } from './lib/festivals';
 import { clientIp, rateHit, verifyTurnstile } from './lib/security';
 import { RESERVED_SLUGS } from './lib/schemas';
+import { mediaStore } from './lib/storage';
 import { digits, isDate, plainText, safeBack, truncate } from './lib/util';
 import { Layout } from './views/layout';
 import { HomePage } from './views/home';
@@ -259,25 +260,29 @@ pub.post('/enquiry', async (c) => {
 pub.get('/media/*', async (c) => {
   const key = decodeURIComponent(c.req.path.slice('/media/'.length));
   if (!/^[\w\-./]+$/.test(key) || key.includes('..')) return c.text('Not found', 404);
-  const obj = await c.env.MEDIA.get(key, { range: c.req.raw.headers, onlyIf: c.req.raw.headers });
-  if (!obj) return c.text('Not found', 404);
-  const headers = new Headers();
-  obj.writeHttpMetadata(headers);
-  headers.set('etag', obj.httpEtag);
-  headers.set('cache-control', 'public, max-age=31536000, immutable');
-  headers.set('accept-ranges', 'bytes');
-  headers.set('content-security-policy', "default-src 'none'; style-src 'unsafe-inline'; sandbox");
-  if (!('body' in obj) || !obj.body) return new Response(null, { status: 304, headers });
-  const range = obj.range as { offset?: number; length?: number; suffix?: number } | undefined;
-  if (c.req.header('range') && range) {
-    const offset = range.suffix !== undefined ? obj.size - range.suffix : range.offset ?? 0;
-    const length = range.suffix !== undefined ? range.suffix : range.length ?? obj.size - offset;
-    headers.set('content-range', `bytes ${offset}-${offset + length - 1}/${obj.size}`);
-    headers.set('content-length', String(length));
-    return new Response(obj.body, { status: 206, headers });
+  const rangeHeader = c.req.header('range') || '';
+  const m = /^bytes=(\d*)-(\d*)$/.exec(rangeHeader.trim());
+  let range: { offset: number; length?: number; suffix?: number } | null = null;
+  if (m && (m[1] || m[2])) {
+    if (m[1]) range = { offset: Number(m[1]), length: m[2] ? Number(m[2]) - Number(m[1]) + 1 : undefined };
+    else range = { offset: 0, suffix: Number(m[2]) };
   }
-  headers.set('content-length', String(obj.size));
-  return new Response(obj.body, { headers });
+  const file = await mediaStore(c.env).get(key, range);
+  if (!file) return c.text('Not found', 404);
+  const headers = new Headers({
+    'content-type': file.mime,
+    etag: file.etag,
+    'cache-control': 'public, max-age=31536000, immutable',
+    'accept-ranges': 'bytes',
+    'content-security-policy': "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+    'content-length': String(file.length),
+  });
+  if (!range && c.req.header('if-none-match') === file.etag) return new Response(null, { status: 304, headers });
+  if (range) {
+    headers.set('content-range', `bytes ${file.offset}-${file.offset + file.length - 1}/${file.size}`);
+    return new Response(file.body, { status: 206, headers });
+  }
+  return new Response(file.body, { headers });
 });
 
 // ---------------------------------------------------------------------------------------------

@@ -10,11 +10,12 @@
     {
       "binding": "DB",
       "database_name": "vp-residency-db",
-      // Replace with the id printed by `npx wrangler d1 create vp-residency-db` before deploying.
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "5771456c-9bd4-4f13-9c26-ab70c410a9ca",
       "migrations_dir": "migrations"
     }
   ],
-  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "vp-residency-media" }],
+  // Optional: once R2 is enabled in the dashboard, create the bucket and uncomment this to store
+  // uploads in R2 (10 GB free) instead of the D1 database (500 MB free).
+  // "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "vp-residency-media" }],
   "observability": { "enabled": true }
 }

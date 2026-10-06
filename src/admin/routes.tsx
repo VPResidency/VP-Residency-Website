@@ -18,6 +18,7 @@ import {
   clearRate, clientIp, hashPassword, isLocked, newTotpSecret, passwordProblem, rateHit, safeEqual, verifyPassword, verifyTotp, verifyTurnstile,
 } from '../lib/security';
 import { audit, saveSetting } from '../lib/settings';
+import { mediaStore } from '../lib/storage';
 import { siteOrigin, verificationCode } from '../lib/seo';
 import { bytes, fmtDate, fmtDateTime, inr, nowSql, parseJson, safeBack, slugify, telLink, waLink } from '../lib/util';
 import { AdminLayout, AuthShell, Card, PostButton, SchemaForm, StatusChip, type AdminCtx } from './ui';
@@ -924,13 +925,14 @@ admin.post('/media/upload', async (c) => {
   const d = new Date();
   const folder = { image: 'img', video: 'video', font: 'font', file: 'file' }[type.kind] || 'file';
   const key = `${folder}/${d.getUTCFullYear()}/${String(d.getUTCMonth() + 1).padStart(2, '0')}/${id}.${type.ext}`;
-  const meta = { httpMetadata: { contentType: type.mime, cacheControl: 'public, max-age=31536000, immutable' } };
-  await c.env.MEDIA.put(key, file.stream(), meta);
+  const store = mediaStore(c.env);
+  const data = await file.arrayBuffer();
+  await store.put(key, data, type.mime);
   if (type.kind === 'image') {
     // A smaller copy for phones (made in the browser); fall back to the original so -sm always exists.
     const thumb = body.thumb;
     const thumbOk = thumb instanceof File && thumb.size < 4e6 && MEDIA_TYPES.find((t) => t.kind === 'image' && t.mime === type.mime)?.test(new Uint8Array(await thumb.slice(0, 16).arrayBuffer()));
-    await c.env.MEDIA.put(smKey(key), thumbOk ? (thumb as File).stream() : file.stream(), meta);
+    await store.put(smKey(key), thumbOk ? await (thumb as File).arrayBuffer() : data, type.mime);
   }
   const filename = (file.name || `upload.${type.ext}`).replace(/[^\w.\- ]+/g, '').slice(0, 120) || `upload.${type.ext}`;
   const width = Math.min(20000, parseInt(str(body.width, 6), 10) || 0) || null;
@@ -972,7 +974,7 @@ admin.post('/media/:id/alt', async (c) => {
 admin.post('/media/:id/delete', async (c) => {
   const m = await c.env.DB.prepare('SELECT * FROM media WHERE id = ?').bind(c.req.param('id')).first<MediaRow>();
   if (m) {
-    await c.env.MEDIA.delete(m.kind === 'image' ? [m.key, smKey(m.key)] : [m.key]);
+    await mediaStore(c.env).delete(m.kind === 'image' ? [m.key, smKey(m.key)] : [m.key]);
     await c.env.DB.prepare('DELETE FROM media WHERE id = ?').bind(m.id).run();
     await audit(c.env.DB, c.get('user'), 'media.delete', m.filename, clientIp(c));
   }
@@ -994,7 +996,7 @@ admin.get('/media', async (c) => {
   return c.html(
     <AdminLayout ctx={ctx} title="Media library" active="media" {...flash(c)}>
       <p class="page-desc">
-        {totals?.n ?? 0} files · {bytes(totals?.b ?? 0)} used of the free 10 GB. Photos are resized and converted to WebP in your browser before upload.
+        {totals?.n ?? 0} files · {bytes(totals?.b ?? 0)} used of the free {c.env.MEDIA ? '10 GB' : '500 MB'}. Photos are resized and converted to WebP in your browser before upload.
       </p>
       <div class="tabs">
         {tabs.map((t) => (

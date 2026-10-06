@@ -2,7 +2,8 @@ import type { Settings } from './lib/defaults';
 
 export type Bindings = {
   DB: D1Database;
-  MEDIA: R2Bucket;
+  /** Optional R2 bucket for uploads; without it uploads are stored in D1 (see lib/storage.ts). */
+  MEDIA?: R2Bucket;
   ASSETS: Fetcher;
   /** One-time key needed to create the first owner account at /admin/setup. */
   ADMIN_SETUP_KEY?: string;

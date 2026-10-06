@@ -10,3 +10,4 @@ dist/
 *.log
 .claude/
 .cloudflare-token
+.admin-setup-key

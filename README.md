@@ -74,16 +74,29 @@ Open `/admin` → you'll be sent to `/admin/setup` to create the owner account u
 
 ---
 
-## Deploy to Cloudflare (free)
-One-time, from this folder:
+## Live site
+**Preview:** https://vp-residency.vpresidency.workers.dev — Cloudflare account *Vpresidency88@gmail.com*, D1 database `vp-residency-db`.
+Search-engine indexing is switched **off** for the preview (Admin → SEO → “Allow search engines”) until prices are confirmed and the real domain is connected.
 
+### Redeploy after changes
+A deploy token for the VP account lives in `.cloudflare-token` (git-ignored, never commit it):
 ```bash
-npx wrangler login
-npx wrangler d1 create vp-residency-db          # copy the database_id into wrangler.jsonc
-npx wrangler r2 bucket create vp-residency-media
-npm run db:migrate:remote
-npx wrangler secret put ADMIN_SETUP_KEY          # any long random text; needed once for /admin/setup
+export CLOUDFLARE_API_TOKEN="$(cat .cloudflare-token)" CLOUDFLARE_ACCOUNT_ID=739caaedda206e3343d369d3251acfa9
+npm run db:migrate:remote   # only when migrations/ changed
 npm run deploy
+```
+
+### Photo storage
+Uploads are stored in the D1 database (500 MB free, no card needed). To use R2 instead (10 GB free): enable R2 in the
+dashboard, run `npx wrangler r2 bucket create vp-residency-media`, uncomment `r2_buckets` in `wrangler.jsonc` and deploy.
+(Files already uploaded to D1 would need re-uploading.)
+
+## Deploy to a fresh Cloudflare account (free)
+```bash
+npx wrangler d1 create vp-residency-db          # copy the database_id into wrangler.jsonc
+npm run db:migrate:remote
+npm run deploy
+npx wrangler secret put ADMIN_SETUP_KEY          # any long random text; needed once for /admin/setup
 ```
 The site goes live at `https://vp-residency.<your-subdomain>.workers.dev`. Then:
 
@@ -95,7 +108,7 @@ The site goes live at `https://vp-residency.<your-subdomain>.workers.dev`. Then:
 Updating later: `git pull && npm run deploy` (run `npm run db:migrate:remote` if a new migration was added).
 
 ### Free-plan limits (plenty for a lodge)
-Workers 100k requests/day · D1 5 GB, 5M reads/day · R2 10 GB, zero egress fees. Static files (photos, CSS, JS) don't count against Worker requests.
+Workers 100k requests/day · D1 500 MB per database, 5M rows read/day · R2 (optional) 10 GB, zero egress fees. Static files (photos, CSS, JS) don't count against Worker requests.
 
 ---
 
