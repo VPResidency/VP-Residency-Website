@@ -7,6 +7,16 @@ import admin from './admin/routes';
 
 const app = new Hono<AppEnv>();
 
+// One canonical host: www.example.com → example.com (keeps Google from seeing two copies of the site).
+app.use('*', async (c, next) => {
+  const url = new URL(c.req.url);
+  if (url.hostname.startsWith('www.')) {
+    url.hostname = url.hostname.slice(4);
+    return c.redirect(url.toString(), 301);
+  }
+  await next();
+});
+
 // Security headers (with a per-request CSP nonce) on every response.
 app.use('*', async (c, next) => {
   const nonce = randomToken(16);
