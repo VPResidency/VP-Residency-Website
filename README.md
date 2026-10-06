@@ -75,8 +75,8 @@ Open `/admin` → you'll be sent to `/admin/setup` to create the owner account u
 ---
 
 ## Live site
-**Preview:** https://vp-residency.vpresidency.workers.dev — Cloudflare account *Vpresidency88@gmail.com*, D1 database `vp-residency-db`.
-Search-engine indexing is switched **off** for the preview (Admin → SEO → “Allow search engines”) until prices are confirmed and the real domain is connected.
+**Live:** https://vpresidency.in (also https://vp-residency.vpresidency.workers.dev) — Cloudflare account *Vpresidency88@gmail.com*, D1 database `vp-residency-db`.
+Search-engine indexing is switched **off** (Admin → SEO → “Allow search engines”) until room prices are confirmed. Domain registered at GoDaddy, DNS on Cloudflare.
 
 ### Redeploy after changes
 A deploy token for the VP account lives in `.cloudflare-token` (git-ignored, never commit it):
