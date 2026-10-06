@@ -9,7 +9,7 @@ import { absUrl, businessJsonLd, pageTitle, verificationCode, type Meta } from '
 import { scriptJson, telLink, waLink } from '../lib/util';
 import { bookHref } from './components';
 
-export const ASSET_VERSION = '8';
+export const ASSET_VERSION = '10';
 
 export type LayoutProps = {
   s: Settings;
@@ -142,11 +142,12 @@ export function Layout({ s, nonce, origin, meta, festival, preview, children }: 
               {raw(festiveCss(fest))}
             </style>
           ) : null}
-          {preloader ? (
-            <script nonce={nonce}>
-              {raw("try{if(!sessionStorage.getItem('vp_intro')){document.documentElement.classList.add('show-intro')}}catch(e){}")}
-            </script>
-          ) : null}
+          <script nonce={nonce}>
+            {raw(
+              "document.documentElement.classList.add('js');" +
+                (preloader ? "try{if(!sessionStorage.getItem('vp_intro')){document.documentElement.classList.add('show-intro')}}catch(e){}" : ''),
+            )}
+          </script>
           {jsonLd.map((ld) => (
             <script type="application/ld+json">{raw(scriptJson(ld))}</script>
           ))}

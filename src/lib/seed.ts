@@ -87,7 +87,7 @@ const POSTS = [
     published_at: '2026-10-03 10:00',
     tags: 'travel guide,perambalur',
     data: {
-      cover: '/images/signboard.webp',
+      cover: '/images/street-view.webp',
       excerpt: 'Temples, a historic fort and a park full of ancient fossil trees — ideas for your free time while you stay in Perambalur.',
       author: 'VP Residency',
       body:
