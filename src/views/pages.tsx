@@ -10,15 +10,14 @@ import {
 // ---------------------------------------------------------------------------------------------
 // Rooms list + search
 // ---------------------------------------------------------------------------------------------
-export type RoomSearch = { checkin: string; checkout: string; guests: number; type: string; max: number; sort: string };
+export type RoomSearch = { checkin: string; checkout: string; guests: number; type: string; sort: string };
 
 export function RoomsPage({ s, rooms, q }: { s: Settings; rooms: Room[]; q: RoomSearch }) {
   const nights = nightsBetween(q.checkin, q.checkout);
-  const searching = !!(q.checkin || q.type || q.max || q.guests > 1);
+  const searching = !!(q.checkin || q.type || q.sort || q.guests > 1);
   let list = rooms.filter((r) => {
     if (q.type === 'ac' && !r.ac) return false;
     if (q.type === 'nonac' && r.ac) return false;
-    if (q.max && r.price > q.max) return false;
     if (q.guests && r.maxAdults + r.maxChildren < q.guests) return false;
     return true;
   });
@@ -58,18 +57,6 @@ export function RoomsPage({ s, rooms, q }: { s: Settings; rooms: Room[]; q: Room
                 <option value="">Any</option>
                 <option value="ac" selected={q.type === 'ac'}>AC</option>
                 <option value="nonac" selected={q.type === 'nonac'}>Non-AC</option>
-              </select>
-            </label>
-            <label class="field">
-              <span>Budget</span>
-              <select name="max">
-                <option value="">Any price</option>
-                {[1000, 1500, 2000, 3000, 5000].map((m) => (
-                  <option value={String(m)} selected={q.max === m}>
-                    Up to {s.booking.currency}
-                    {inr(m)}
-                  </option>
-                ))}
               </select>
             </label>
             <label class="field">

@@ -71,7 +71,6 @@ pub.get('/rooms', async (c) => {
     checkout: isDate(qp.checkout) ? qp.checkout : '',
     guests: Math.min(20, Math.max(0, parseInt(qp.guests || '0', 10) || 0)),
     type: qp.type === 'ac' || qp.type === 'nonac' ? qp.type : '',
-    max: Math.max(0, parseInt(qp.max || '0', 10) || 0),
     sort: qp.sort === 'price_asc' || qp.sort === 'price_desc' ? qp.sort : '',
   };
   if (q.checkin && q.checkout && q.checkout <= q.checkin) q.checkout = '';

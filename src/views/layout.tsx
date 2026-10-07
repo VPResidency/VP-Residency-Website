@@ -9,7 +9,7 @@ import { absUrl, businessJsonLd, pageTitle, verificationCode, type Meta } from '
 import { scriptJson, telLink, waLink } from '../lib/util';
 import { bookHref } from './components';
 
-export const ASSET_VERSION = '10';
+export const ASSET_VERSION = '11';
 
 export type LayoutProps = {
   s: Settings;

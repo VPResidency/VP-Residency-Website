@@ -2222,7 +2222,7 @@ textarea {
 /* rooms page */
 .filter-bar {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr)) auto;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
   gap: 12px;
   align-items: end;
   padding: 18px;
@@ -2903,7 +2903,7 @@ html.js[data-anim='on'] [data-reveal].is-in {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .filter-bar .btn {
-    grid-column: span 3;
+    align-self: end;
   }
   .footer-grid {
     grid-template-columns: 1fr 1fr;
@@ -3131,7 +3131,7 @@ html.js[data-anim='on'] [data-reveal].is-in {
     margin-top: -60px;
   }
   .filter-bar .btn {
-    grid-column: span 2;
+    align-self: end;
   }
   .room-row {
     grid-template-columns: 1fr;
