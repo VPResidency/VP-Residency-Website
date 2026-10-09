@@ -7,16 +7,6 @@ import admin from './admin/routes';
 
 const app = new Hono<AppEnv>();
 
-// One canonical host: www.example.com → example.com (keeps Google from seeing two copies of the site).
-app.use('*', async (c, next) => {
-  const url = new URL(c.req.url);
-  if (url.hostname.startsWith('www.')) {
-    url.hostname = url.hostname.slice(4);
-    return c.redirect(url.toString(), 301);
-  }
-  await next();
-});
-
 // Security headers (with a per-request CSP nonce) on every response.
 app.use('*', async (c, next) => {
   const nonce = randomToken(16);
@@ -32,7 +22,22 @@ app.use('*', async (c, next) => {
 
 // Site settings for everything except raw media files.
 app.use('*', async (c, next) => {
-  if (!c.req.path.startsWith('/media/')) c.set('s', await loadSettings(c.env.DB));
+  if (c.req.path.startsWith('/media/')) return next();
+  const s = await loadSettings(c.env.DB);
+  c.set('s', s);
+  // One canonical address: www.* and any older domain (e.g. vpresidency.in) permanently redirect to the
+  // "Live website address" in Admin → SEO, so Google and old links all end up on one site.
+  const url = new URL(c.req.url);
+  const host = url.hostname;
+  const devHost = host === 'localhost' || host === '127.0.0.1' || host.endsWith('.workers.dev');
+  let target = host.startsWith('www.') ? host.slice(4) : host;
+  const canonical = /^https:\/\/[a-z0-9.-]+$/i.test(s.seo.siteUrl) ? new URL(s.seo.siteUrl).hostname : '';
+  if (canonical && !devHost) target = canonical;
+  if (target !== host) {
+    url.hostname = target;
+    if (canonical && !devHost) url.protocol = 'https:';
+    return c.redirect(url.toString(), 301);
+  }
   await next();
 });
 
