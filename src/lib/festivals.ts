@@ -95,13 +95,6 @@ export const FESTIVAL_DEFAULTS: Festival[] = [
     ctaText: 'Book your stay', art: 'tricolor', garland: 'tricolor', animation: 'tricolor', density: 1,
   },
   {
-    ...base, id: 'valentines', name: "Valentine's week", start: '2027-02-10', end: '2027-02-15',
-    greeting: "Valentine's special: ask for our rose-petal room decoration",
-    popupTitle: 'Make it special', popupText: 'Surprise your loved one with our towel-art and rose-petal room decoration. Just ask when you book.',
-    popupImage: '/images/room-decor.webp', ctaText: 'Ask on WhatsApp', art: 'hearts', garland: 'hearts', animation: 'hearts',
-    useColors: true, primary: '#8E1B3A', accent: '#E9A0B4', dark: '#2C0712',
-  },
-  {
     ...base, id: 'ramzan', name: 'Ramzan (Eid al-Fitr)', start: '2027-03-08', end: '2027-03-12',
     greeting: 'Eid Mubarak! Warm wishes from VP Residency',
     popupTitle: 'Eid Mubarak!', popupText: 'Wishing you and your loved ones peace, happiness and prosperity this Eid.',

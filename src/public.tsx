@@ -71,7 +71,7 @@ pub.get('/rooms', async (c) => {
     checkout: isDate(qp.checkout) ? qp.checkout : '',
     guests: Math.min(20, Math.max(0, parseInt(qp.guests || '0', 10) || 0)),
     type: qp.type === 'ac' || qp.type === 'nonac' ? qp.type : '',
-    sort: qp.sort === 'price_asc' || qp.sort === 'price_desc' ? qp.sort : '',
+    sort: s.booking.showPrices && (qp.sort === 'price_asc' || qp.sort === 'price_desc') ? qp.sort : '',
   };
   if (q.checkin && q.checkout && q.checkout <= q.checkin) q.checkout = '';
   const rooms = await publishedRooms(c.env.DB);
@@ -79,7 +79,7 @@ pub.get('/rooms', async (c) => {
   return renderPage(
     c,
     {
-      title: 'Rooms & Prices',
+      title: s.booking.showPrices ? 'Rooms & Prices' : 'Our Rooms',
       description: `AC and Non-AC rooms at ${s.site.name}, ${s.site.city}. Check prices and availability, then book on WhatsApp or by phone.`,
       path: '/rooms',
       jsonLd: [breadcrumbJsonLd(origin, [{ name: 'Home', path: '/' }, { name: 'Rooms', path: '/rooms' }])],

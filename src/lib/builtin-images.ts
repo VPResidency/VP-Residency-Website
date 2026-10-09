@@ -89,10 +89,6 @@ export const BUILTIN_IMAGES: { url: string; name: string }[] = [
   "name": "reception 3"
  },
  {
-  "url": "/images/room-decor.webp",
-  "name": "room decor"
- },
- {
   "url": "/images/signboard.webp",
   "name": "signboard"
  },

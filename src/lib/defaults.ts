@@ -46,11 +46,13 @@ export const DEFAULTS = {
     streetPhoto: '/images/street-sign.webp',
     youtube: '',
     footerAbout:
-      'A clean, family-friendly lodge on Trichy Main Road, close to Perambalur New Bus Stand. Air-conditioned rooms, friendly staff and honest prices.',
+      'A clean, family-friendly lodge on Trichy Main Road, close to Perambalur New Bus Stand. AC and Non-AC rooms, friendly staff and honest prices.',
     copyright: '© {year} VP Residency, Perambalur. All rights reserved.',
   },
 
   booking: {
+    showPrices: false,
+    showCategories: false,
     bookButtonText: 'Book Now',
     bookAction: 'whatsapp',
     whatsappTemplate:
@@ -89,7 +91,7 @@ export const DEFAULTS = {
       eyebrow: 'Classy Comfort Living · Perambalur',
       title: 'Your calm, spotless stay on Trichy Main Road',
       subtitle:
-        'Air-conditioned rooms with marble-finish bathrooms, a 24-hour front desk, free Wi-Fi and parking — minutes from Perambalur New Bus Stand.',
+        'AC and Non-AC rooms with marble-finish bathrooms, a 24-hour front desk, free Wi-Fi and parking — minutes from Perambalur New Bus Stand.',
       images: ['/images/lounge.webp', '/images/deluxe-room-1.webp', '/images/lobby-1.webp', '/images/corridor-1.webp', '/images/building.webp'] as string[],
       video: '',
       overlay: 50,
@@ -108,7 +110,7 @@ export const DEFAULTS = {
     rooms: {
       eyebrow: 'Stay with us',
       title: 'Rooms designed for a restful night',
-      subtitle: 'Spotless air-conditioned rooms with fresh linen, hot water and a TV — for solo travellers, couples and families.',
+      subtitle: 'Spotless AC and Non-AC rooms with fresh linen and hot water — for solo travellers, families and business guests.',
       limit: 6,
     },
     about: {
@@ -170,8 +172,8 @@ export const DEFAULTS = {
         a: 'Check-in and check-out are at 12:00 PM. Early check-in and late check-out are available on request, subject to availability.',
       },
       {
-        q: 'What kind of rooms do you have?',
-        a: 'We have air-conditioned Deluxe and Classic double rooms, each with an attached bathroom, hot water and free Wi-Fi. Call us to ask about other room options and current prices.',
+        q: 'Do you have AC and Non-AC rooms?',
+        a: 'Yes. We have both AC and Non-AC rooms, each with an attached bathroom, hot water and free Wi-Fi. Call us to check availability.',
       },
       { q: 'Is parking available?', a: 'Yes, parking is free for all our guests.' },
       { q: 'Is Wi-Fi free?', a: 'Yes, Wi-Fi is free throughout the property.' },
@@ -191,7 +193,7 @@ export const DEFAULTS = {
     items: [
       { icon: 'wifi', label: 'Free Wi-Fi' },
       { icon: 'square-parking', label: 'Free parking' },
-      { icon: 'snowflake', label: 'Air-conditioned rooms' },
+      { icon: 'snowflake', label: 'AC & Non-AC rooms' },
       { icon: 'concierge-bell', label: '24-hour room service' },
       { icon: 'sparkles', label: 'Daily housekeeping' },
       { icon: 'shirt', label: 'Laundry service' },
@@ -202,7 +204,6 @@ export const DEFAULTS = {
       { icon: 'flame', label: '24-hour hot water' },
       { icon: 'shower-head', label: 'Marble-finish bathrooms' },
       { icon: 'lamp-desk', label: 'Work desk & wardrobe' },
-      { icon: 'heart', label: 'Room decoration for couples' },
       { icon: 'luggage', label: 'Early check-in on request' },
     ] as { icon: string; label: string }[],
   },
@@ -210,18 +211,17 @@ export const DEFAULTS = {
   gallery: {
     categories: ['Rooms', 'Bathrooms', 'Reception & lobby', 'Building'] as string[],
     items: [
-      { image: '/images/deluxe-room-1.webp', caption: 'Deluxe AC room with TV and wardrobe', category: 'Rooms' },
+      { image: '/images/deluxe-room-1.webp', caption: 'AC room with TV and wardrobe', category: 'Rooms' },
       { image: '/images/lobby-1.webp', caption: 'Our lobby', category: 'Reception & lobby' },
       { image: '/images/building.webp', caption: 'VP Residency on Trichy Main Road', category: 'Building' },
-      { image: '/images/classic-room-1.webp', caption: 'Classic AC room', category: 'Rooms' },
+      { image: '/images/classic-room-1.webp', caption: 'AC room', category: 'Rooms' },
       { image: '/images/bathroom-1.webp', caption: 'Marble-finish bathroom with hot water', category: 'Bathrooms' },
       { image: '/images/reception-1.webp', caption: '24-hour reception', category: 'Reception & lobby' },
-      { image: '/images/room-decor.webp', caption: 'Room decoration for special occasions', category: 'Rooms' },
       { image: '/images/corridor-1.webp', caption: 'Corridor', category: 'Building' },
       { image: '/images/deluxe-room-2.webp', caption: 'Work desk, TV and wardrobe', category: 'Rooms' },
       { image: '/images/lounge.webp', caption: 'Lounge seating', category: 'Reception & lobby' },
       { image: '/images/signboard.webp', caption: 'Our sign', category: 'Building' },
-      { image: '/images/classic-room-2.webp', caption: 'Classic AC room', category: 'Rooms' },
+      { image: '/images/classic-room-2.webp', caption: 'AC room', category: 'Rooms' },
       { image: '/images/bathroom-2.webp', caption: 'Attached bathroom', category: 'Bathrooms' },
       { image: '/images/reception-2.webp', caption: 'Reception', category: 'Reception & lobby' },
       { image: '/images/deluxe-room-3.webp', caption: 'Air-conditioned room', category: 'Rooms' },
@@ -235,11 +235,6 @@ export const DEFAULTS = {
 
   offers: {
     items: [
-      {
-        title: 'Room decoration for couples',
-        text: 'Celebrating an anniversary, honeymoon or birthday? Ask for our towel-art and rose-petal room decoration when you book.',
-        image: '/images/room-decor.webp', badge: 'Special occasions', ctaText: 'Ask on WhatsApp', ctaLink: '',
-      },
       {
         title: 'Early check-in & late check-out',
         text: 'Arriving early by bus or leaving late? Tell us your timings — early check-in and late check-out are available on request.',
@@ -319,9 +314,9 @@ export const DEFAULTS = {
   seo: {
     siteUrl: '',
     titleTemplate: '%s | VP Residency Perambalur',
-    homeTitle: 'VP Residency Perambalur – AC Rooms near New Bus Stand | Classy Comfort Living',
+    homeTitle: 'VP Residency Perambalur – AC & Non-AC Rooms near New Bus Stand | Classy Comfort Living',
     description:
-      'VP Residency is a clean, family-friendly lodge on Trichy Main Road near Perambalur New Bus Stand. Air-conditioned rooms, free Wi-Fi, free parking and a 24-hour front desk. Call +91 93426 56588.',
+      'VP Residency is a clean, family-friendly lodge on Trichy Main Road near Perambalur New Bus Stand. AC & Non-AC rooms, free Wi-Fi, free parking and a 24-hour front desk. Call +91 93426 56588.',
     ogImage: '/brand/og-image.jpg',
     googleVerification: '',
     verifiedByDns: false,

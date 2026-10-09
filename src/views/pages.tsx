@@ -33,7 +33,7 @@ export function RoomsPage({ s, rooms, q }: { s: Settings; rooms: Room[]; q: Room
 
   return (
     <>
-      <PageBanner s={s} title="Rooms & Prices" subtitle="Spotless air-conditioned rooms with hot water, Wi-Fi and a 24-hour front desk." image="/images/deluxe-room-1.webp" crumbs={[{ name: 'Home', href: '/' }, { name: 'Rooms' }]} />
+      <PageBanner s={s} title={s.booking.showPrices ? 'Rooms & Prices' : 'Our Rooms'} subtitle="AC and Non-AC rooms with hot water, Wi-Fi and a 24-hour front desk." image="/images/deluxe-room-1.webp" crumbs={[{ name: 'Home', href: '/' }, { name: 'Rooms' }]} />
       <section class="section section-tight">
         <div class="container">
           <form class="filter-bar" action="/rooms" method="get" data-search>
@@ -59,14 +59,16 @@ export function RoomsPage({ s, rooms, q }: { s: Settings; rooms: Room[]; q: Room
                 <option value="nonac" selected={q.type === 'nonac'}>Non-AC</option>
               </select>
             </label>
-            <label class="field">
-              <span>Sort</span>
-              <select name="sort">
-                <option value="">Recommended</option>
-                <option value="price_asc" selected={q.sort === 'price_asc'}>Price: low to high</option>
-                <option value="price_desc" selected={q.sort === 'price_desc'}>Price: high to low</option>
-              </select>
-            </label>
+            {s.booking.showPrices ? (
+              <label class="field">
+                <span>Sort</span>
+                <select name="sort">
+                  <option value="">Recommended</option>
+                  <option value="price_asc" selected={q.sort === 'price_asc'}>Price: low to high</option>
+                  <option value="price_desc" selected={q.sort === 'price_desc'}>Price: high to low</option>
+                </select>
+              </label>
+            ) : null}
             <button class="btn btn-primary" type="submit">
               <Icon name="search" size={18} /> Search
             </button>
@@ -115,7 +117,7 @@ export function RoomsPage({ s, rooms, q }: { s: Settings; rooms: Room[]; q: Room
               </div>
             </div>
           )}
-          {s.booking.taxNote ? <p class="fine-print">{s.booking.taxNote}</p> : null}
+          {s.booking.showPrices && s.booking.taxNote ? <p class="fine-print">{s.booking.taxNote}</p> : null}
         </div>
       </section>
       {s.offers.items.length ? (
@@ -192,7 +194,7 @@ export function RoomPage(props: {
       <section class="section section-tight">
         <div class="container room-layout">
           <div class="room-main">
-            {room.category ? <p class="eyebrow">{room.category}</p> : null}
+            {s.booking.showCategories && room.category ? <p class="eyebrow">{room.category}</p> : null}
             <h1 class="room-title">{room.name}</h1>
             <ul class="room-facts">
               <li>
@@ -268,9 +270,9 @@ export function RoomPage(props: {
           </div>
 
           <aside class="booking-box" aria-label="Book this room">
-            <Price s={s} room={room} large />
-            {s.booking.taxNote ? <p class="fine-print">{s.booking.taxNote}</p> : null}
-            <form class="booking-form" action={`/rooms/${room.slug}`} method="get" data-booking data-room={room.name} data-price={room.price} data-currency={s.booking.currency} data-wa={wa} data-wa-template={s.booking.whatsappTemplate}>
+            {s.booking.showPrices ? <Price s={s} room={room} large /> : <p class="booking-ask">Ask us for today's best rate</p>}
+            {s.booking.showPrices && s.booking.taxNote ? <p class="fine-print">{s.booking.taxNote}</p> : null}
+            <form class="booking-form" action={`/rooms/${room.slug}`} method="get" data-booking data-room={room.name} data-price={s.booking.showPrices ? room.price : undefined} data-currency={s.booking.currency} data-wa={wa} data-wa-template={s.booking.whatsappTemplate}>
               <label class="field">
                 <span>Check-in</span>
                 <input type="date" name="checkin" value={props.checkin} min={todayIso()} data-checkin />
@@ -291,8 +293,8 @@ export function RoomPage(props: {
                 </button>
               </noscript>
             </form>
-            <p class="booking-total" data-total hidden={!nights}>
-              {nights ? (
+            <p class="booking-total" data-total hidden={!nights || !s.booking.showPrices}>
+              {nights && s.booking.showPrices ? (
                 <>
                   {nights} {nights === 1 ? 'night' : 'nights'} × {s.booking.currency}
                   {inr(room.price)} = <strong>{s.booking.currency}{inr(nights * room.price)}</strong>

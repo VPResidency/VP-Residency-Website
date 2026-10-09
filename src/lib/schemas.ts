@@ -264,6 +264,10 @@ export const SETTINGS_FORMS: Record<SettingsKey, SettingsForm> = {
   booking: {
     title: 'Booking & prices', desc: 'How guests book, WhatsApp message text, currency and travel-site links.', icon: 'calendar-days', group: 'Settings',
     schema: [
+      { title: 'What guests can see', desc: 'Switch these on only when you want them visible on the website.', fields: [
+        { k: 'showPrices', t: 'toggle', label: 'Show room prices on the website', w: 'half' },
+        { k: 'showCategories', t: 'toggle', label: 'Show room categories (Deluxe, Classic…)', w: 'half' },
+      ] },
       { title: 'Booking buttons', fields: [
         { k: 'bookButtonText', t: 'text', label: '"Book" button text', w: 'half', max: 30 },
         { k: 'bookAction', t: 'select', label: 'What the main Book button does', w: 'half', options: [

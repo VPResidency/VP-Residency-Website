@@ -131,7 +131,7 @@
       var ci = booking.checkin.value, co = booking.checkout.value, g = booking.guests.value;
       var n = nights(ci, co);
       var price = Number(booking.dataset.price) || 0;
-      if (total) {
+      if (total && price) {
         total.hidden = !n;
         if (n) total.innerHTML = '';
         if (n) {

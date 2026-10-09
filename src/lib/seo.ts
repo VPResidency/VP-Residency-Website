@@ -50,7 +50,7 @@ export function businessJsonLd(s: Settings, origin: string): object {
     email: site.email || undefined,
     image: absUrl(origin, s.seo.ogImage || site.logo || s.home.hero.images[0] || '') || undefined,
     logo: site.logo ? absUrl(origin, site.logo) : undefined,
-    priceRange: s.seo.priceRange || undefined,
+    priceRange: s.booking.showPrices ? s.seo.priceRange || undefined : undefined,
     checkinTime: to24h(site.checkIn),
     checkoutTime: to24h(site.checkOut),
     address: {

@@ -153,7 +153,7 @@ export function RoomCard({ s, room, query = '', unavailable = false }: { s: Sett
         {room.soldOut ? <span class="badge badge-soldout">Sold out</span> : unavailable ? <span class="badge badge-soldout">Not available for your dates</span> : null}
       </a>
       <div class="room-card-body">
-        {room.category ? <p class="room-cat">{room.category}</p> : null}
+        {s.booking.showCategories && room.category ? <p class="room-cat">{room.category}</p> : null}
         <h3>
           <a href={href}>{room.name}</a>
         </h3>
@@ -179,8 +179,8 @@ export function RoomCard({ s, room, query = '', unavailable = false }: { s: Sett
             ))}
           </ul>
         ) : null}
-        <div class="room-card-foot">
-          <Price s={s} room={room} />
+        <div class={`room-card-foot${s.booking.showPrices ? '' : ' no-price'}`}>
+          {s.booking.showPrices ? <Price s={s} room={room} /> : null}
           <a class="btn btn-primary btn-sm" href={href}>
             View room <Icon name="arrow-right" size={16} />
           </a>
@@ -208,7 +208,7 @@ export function RoomRow({ s, room, query = '', unavailable = false, nights = 0 }
         ) : null}
       </a>
       <div class="room-row-body">
-        {room.category ? <p class="room-cat">{room.category}</p> : null}
+        {s.booking.showCategories && room.category ? <p class="room-cat">{room.category}</p> : null}
         <h2 class="h3">
           <a href={href}>{room.name}</a>
         </h2>
@@ -240,8 +240,8 @@ export function RoomRow({ s, room, query = '', unavailable = false, nights = 0 }
       </div>
       <div class="room-row-side">
         {room.soldOut ? <span class="avail is-no">Sold out</span> : unavailable ? <span class="avail is-no">Not available for your dates</span> : <span class="avail">Available</span>}
-        <Price s={s} room={room} large />
-        {nights ? (
+        {s.booking.showPrices ? <Price s={s} room={room} large /> : null}
+        {s.booking.showPrices && nights ? (
           <p class="row-total">
             {s.booking.currency}
             {inr(room.price * nights)} for {nights} {nights === 1 ? 'night' : 'nights'}

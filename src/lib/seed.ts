@@ -5,57 +5,45 @@ const amenity = (icon: string, label: string) => ({ icon, label });
 
 const ROOMS = [
   {
-    slug: 'deluxe-ac-room', name: 'Deluxe AC Room', status: 'published', featured: 1, sort: 1, ac: 'ac', price: 1300,
+    slug: 'ac-room', name: 'AC Room', status: 'published', featured: 1, sort: 1, ac: 'ac', price: 1300,
     data: {
-      category: 'Deluxe', originalPrice: 0, maxAdults: 2, maxChildren: 1, roomCount: 1, beds: '1 double bed', size: '',
-      images: ['/images/deluxe-room-1.webp', '/images/deluxe-room-2.webp', '/images/deluxe-room-3.webp', '/images/bathroom-2.webp', '/images/bathroom-1.webp'],
-      shortDesc: 'An air-conditioned double room with an LED TV, work desk, full-height wardrobe and a marble-finish bathroom.',
-      description:
-        'Unwind in a quiet, air-conditioned room after a long day on the road. The Deluxe AC Room has a comfortable double bed with crisp white linen and a fresh duvet, a built-in unit with an LED TV, work desk and mirror, and a tall wardrobe for your things.\n\nThe attached bathroom is finished in marble-look tiles with a wall-hung western toilet, health faucet and a geyser for hot water any time.\n\n**Good for:** couples, business trips, hospital visits and overnight halts on the Trichy–Chennai highway.',
-      highlights: ['Air-conditioned', 'LED TV', 'Hot water'],
-      amenities: [
-        amenity('snowflake', 'Inverter air conditioner'), amenity('tv', 'LED TV'), amenity('wifi', 'Free Wi-Fi'),
-        amenity('lamp-desk', 'Work desk & chair'), amenity('door-open', 'Full-height wardrobe'), amenity('flame', 'Geyser — hot water 24 h'),
-        amenity('shower-head', 'Marble-finish bathroom'), amenity('fan', 'Ceiling fan'), amenity('sparkles', 'Daily housekeeping'),
-        amenity('concierge-bell', 'Room service'), amenity('square-parking', 'Free parking'),
+      category: '', originalPrice: 0, maxAdults: 2, maxChildren: 1, roomCount: 1, beds: '1 double bed', size: '',
+      images: [
+        '/images/deluxe-room-1.webp', '/images/classic-room-1.webp', '/images/deluxe-room-2.webp', '/images/classic-room-2.webp',
+        '/images/deluxe-room-3.webp', '/images/classic-room-3.webp', '/images/classic-room-4.webp', '/images/bathroom-2.webp', '/images/bathroom-1.webp',
       ],
-      soldOut: false, blocked: [], bookingUrl: '', seoTitle: '', seoDescription: '', ogImage: '',
-    },
-  },
-  {
-    slug: 'classic-ac-room', name: 'Classic AC Room', status: 'published', featured: 1, sort: 2, ac: 'ac', price: 1000,
-    data: {
-      category: 'Classic', originalPrice: 0, maxAdults: 2, maxChildren: 1, roomCount: 1, beds: '1 double bed', size: '',
-      images: ['/images/classic-room-1.webp', '/images/classic-room-2.webp', '/images/classic-room-3.webp', '/images/classic-room-4.webp', '/images/bathroom-3.webp', '/images/bathroom-4.webp'],
-      shortDesc: 'A bright, neat air-conditioned double room with a separate wash basin and attached bathroom — great value.',
+      shortDesc: 'Clean, comfortable air-conditioned rooms with a double bed, attached marble-finish bathroom, 24-hour hot water and free Wi-Fi.',
       description:
-        'Our best-value air-conditioned room — bright, airy and spotless. A comfortable double bed with fresh linen, an inverter AC and ceiling fan, a chair, and a separate wash-basin area at the entrance.\n\nThe attached bathroom has marble-look tiles, a western toilet and hot water from a geyser.',
-      highlights: ['Best value', 'Air-conditioned', 'Hot water'],
+        'Unwind in a quiet, air-conditioned room after a long day on the road. Each AC room has a comfortable double bed with crisp white linen and a fresh duvet, a ceiling fan, and an attached bathroom finished in marble-look tiles with a western toilet, health faucet and a geyser for hot water any time.\n\nMany rooms also have an LED TV, a work desk and a full-height wardrobe — ask us when you book.\n\n**Good for:** business trips, family visits, hospital visits and overnight halts on the Trichy–Chennai highway.',
+      highlights: ['Air-conditioned', 'Hot water', 'Free Wi-Fi'],
       amenities: [
         amenity('snowflake', 'Inverter air conditioner'), amenity('wifi', 'Free Wi-Fi'), amenity('fan', 'Ceiling fan'),
-        amenity('droplets', 'Separate wash basin'), amenity('flame', 'Geyser — hot water 24 h'), amenity('shower-head', 'Attached bathroom'),
-        amenity('sparkles', 'Daily housekeeping'), amenity('square-parking', 'Free parking'),
+        amenity('flame', 'Geyser — hot water 24 h'), amenity('shower-head', 'Marble-finish bathroom'), amenity('tv', 'LED TV (most rooms)'),
+        amenity('sparkles', 'Daily housekeeping'), amenity('concierge-bell', 'Room service'), amenity('square-parking', 'Free parking'),
       ],
       soldOut: false, blocked: [], bookingUrl: '', seoTitle: '', seoDescription: '', ogImage: '',
     },
   },
   {
-    // Hidden until the owner confirms this room type exists (Google reviews mention non-AC rooms).
-    slug: 'standard-non-ac-room', name: 'Standard Non-AC Room', status: 'draft', featured: 0, sort: 3, ac: 'nonac', price: 800,
+    slug: 'non-ac-room', name: 'Non-AC Room', status: 'published', featured: 1, sort: 2, ac: 'nonac', price: 800,
     data: {
-      category: 'Standard', originalPrice: 0, maxAdults: 2, maxChildren: 1, roomCount: 1, beds: '1 double bed', size: '',
+      category: '', originalPrice: 0, maxAdults: 2, maxChildren: 1, roomCount: 1, beds: '1 double bed', size: '',
       images: [],
-      shortDesc: 'A clean, airy and budget-friendly room with a fan and attached bathroom.',
-      description: 'Add photos and details, then set the status to Published to show this room on the website.',
-      highlights: ['Budget', 'Attached bathroom'],
-      amenities: [amenity('fan', 'Ceiling fan'), amenity('wifi', 'Free Wi-Fi'), amenity('shower-head', 'Attached bathroom'), amenity('flame', 'Hot water')],
+      shortDesc: 'A clean, airy and budget-friendly room with a ceiling fan, double bed and attached bathroom with hot water.',
+      description:
+        'Our budget-friendly option — a neat, well-ventilated room with a comfortable double bed, ceiling fan and an attached bathroom with hot water. Everything you need for a good night\'s sleep.',
+      highlights: ['Budget friendly', 'Ceiling fan', 'Hot water'],
+      amenities: [
+        amenity('fan', 'Ceiling fan'), amenity('wifi', 'Free Wi-Fi'), amenity('shower-head', 'Attached bathroom'),
+        amenity('flame', 'Hot water'), amenity('sparkles', 'Daily housekeeping'), amenity('square-parking', 'Free parking'),
+      ],
       soldOut: false, blocked: [], bookingUrl: '', seoTitle: '', seoDescription: '', ogImage: '',
     },
   },
   {
-    slug: 'family-ac-room', name: 'Family AC Room', status: 'draft', featured: 0, sort: 4, ac: 'ac', price: 1800,
+    slug: 'family-ac-room', name: 'Family AC Room', status: 'draft', featured: 0, sort: 3, ac: 'ac', price: 1800,
     data: {
-      category: 'Family', originalPrice: 0, maxAdults: 4, maxChildren: 2, roomCount: 1, beds: '2 double beds', size: '',
+      category: '', originalPrice: 0, maxAdults: 4, maxChildren: 2, roomCount: 1, beds: '2 double beds', size: '',
       images: [],
       shortDesc: 'A spacious air-conditioned room for families and small groups travelling together.',
       description: 'Add photos and details, then set the status to Published to show this room on the website.',
@@ -77,7 +65,7 @@ const POSTS = [
       excerpt: 'Spotless air-conditioned rooms on Trichy Main Road, close to Perambalur New Bus Stand — here is what to expect when you stay with us.',
       author: 'VP Residency',
       body:
-        "Looking for a clean, safe and affordable place to stay in Perambalur? VP Residency is on **Trichy Main Road in Sungu Pettai**, beside the Royal Enfield service centre and close to the New Bus Stand.\n\n## Rooms for every trip\nOur **air-conditioned rooms** come with fresh white linen, an attached marble-finish bathroom with hot water, and free Wi-Fi. Every room is cleaned daily.\n\n## What's included\n- Free Wi-Fi\n- Free parking\n- 24-hour front desk and room service\n- Laundry service\n- A smoke-free, family-friendly environment\n\n## Check-in made easy\nCheck-in and check-out are at **12:00 PM**. Need to arrive early or leave late? Just ask — early check-in and late check-out are available on request.\n\n## How to book\nCall or WhatsApp us on **+91 93426 56588**, send an enquiry from the [Rooms page](/rooms), or book through your favourite travel site. We look forward to hosting you!",
+        "Looking for a clean, safe and affordable place to stay in Perambalur? VP Residency is on **Trichy Main Road in Sungu Pettai**, beside the Royal Enfield service centre and close to the New Bus Stand.\n\n## Rooms for every trip\nOur **AC and Non-AC rooms** come with fresh white linen, an attached marble-finish bathroom with hot water, and free Wi-Fi. Every room is cleaned daily.\n\n## What's included\n- Free Wi-Fi\n- Free parking\n- 24-hour front desk and room service\n- Laundry service\n- A smoke-free, family-friendly environment\n\n## Check-in made easy\nCheck-in and check-out are at **12:00 PM**. Need to arrive early or leave late? Just ask — early check-in and late check-out are available on request.\n\n## How to book\nCall or WhatsApp us on **+91 93426 56588**, send an enquiry from the [Rooms page](/rooms), or book through your favourite travel site. We look forward to hosting you!",
       seoTitle: '', seoDescription: '', ogImage: '',
     },
   },
@@ -104,7 +92,7 @@ const PAGES = [
       subtitle: 'A clean, friendly and affordable stay on Trichy Main Road, Perambalur.',
       cover: '/images/lobby-1.webp',
       body:
-        "VP Residency is a family-friendly lodge in **Sungu Pettai, Perambalur**, on Trichy Main Road near the New Bus Stand.\n\nWe opened with a simple idea: travellers deserve a spotless room, a warm welcome and honest prices. Our guests tell us it's the cleanliness, the friendly staff and the convenient location that bring them back — and we're proud of our **4.8-star rating on Google**.\n\n## Why guests choose us\n- Neat, clean air-conditioned rooms, refreshed every day\n- Marble-finish bathrooms with 24-hour hot water\n- 24-hour front desk and room service\n- Free Wi-Fi and free parking\n- Laundry service\n- Safe for families, smoke-free\n- Walkable to the New Bus Stand and close to SPT Hospital\n\nWhether you're visiting for business, a family function, a hospital visit or a temple trip, we'll make sure you rest well.",
+        "VP Residency is a family-friendly lodge in **Sungu Pettai, Perambalur**, on Trichy Main Road near the New Bus Stand.\n\nWe opened with a simple idea: travellers deserve a spotless room, a warm welcome and honest prices. Our guests tell us it's the cleanliness, the friendly staff and the convenient location that bring them back — and we're proud of our **4.8-star rating on Google**.\n\n## Why guests choose us\n- Neat, clean AC and Non-AC rooms, refreshed every day\n- Marble-finish bathrooms with 24-hour hot water\n- 24-hour front desk and room service\n- Free Wi-Fi and free parking\n- Laundry service\n- Safe for families, smoke-free\n- Walkable to the New Bus Stand and close to SPT Hospital\n\nWhether you're visiting for business, a family function, a hospital visit or a temple trip, we'll make sure you rest well.",
       showEnquiry: true, seoTitle: 'About VP Residency, Perambalur', seoDescription: '', ogImage: '', noindex: false,
     },
   },

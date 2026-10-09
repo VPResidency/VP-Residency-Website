@@ -1193,6 +1193,17 @@ textarea {
   padding-top: 16px;
   border-top: 1px dashed var(--c-border);
 }
+.room-card-foot.no-price {
+  justify-content: flex-end;
+}
+.booking-ask {
+  margin: 0;
+  font-family: var(--f-heading);
+  font-size: 1.5rem;
+  font-weight: var(--fw-heading);
+  color: var(--c-primary);
+  line-height: 1.2;
+}
 .price {
   display: flex;
   align-items: baseline;
