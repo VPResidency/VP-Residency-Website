@@ -75,8 +75,8 @@ Open `/admin` → you'll be sent to `/admin/setup` to create the owner account u
 ---
 
 ## Live site
-**Live:** https://vpresidency.in (also https://vp-residency.vpresidency.workers.dev) — Cloudflare account *Vpresidency88@gmail.com*, D1 database `vp-residency-db`.
-Search-engine indexing is switched **off** (Admin → SEO → “Allow search engines”) until room prices are confirmed. Domain registered at GoDaddy, DNS on Cloudflare.
+**Live:** https://vpresidencyperambalur.in — the older vpresidency.in and both www. addresses 301-redirect to it (also https://vp-residency.vpresidency.workers.dev) — Cloudflare account *Vpresidency88@gmail.com*, D1 database `vp-residency-db`.
+Search-engine indexing is switched **off** (Admin → SEO → “Allow search engines”) until room prices are confirmed. Domains registered at GoDaddy, DNS on Cloudflare. The main address is Admin → SEO → “Live website address”; every other host redirects there (src/index.tsx).
 
 ### Redeploy after changes
 A deploy token for the VP account lives in `.cloudflare-token` (git-ignored, never commit it):
