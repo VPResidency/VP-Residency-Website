@@ -1368,6 +1368,40 @@ input:disabled {
   color: var(--a-muted);
   font-size: 0.88rem;
 }
+.name-list {
+  display: grid;
+  gap: 10px;
+}
+.name-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid var(--a-border);
+  border-radius: 10px;
+}
+.name-row img {
+  width: 84px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex: none;
+}
+.name-fld {
+  display: grid;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+.name-fld .muted {
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.name-fld input {
+  width: 100%;
+}
 .pick-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));

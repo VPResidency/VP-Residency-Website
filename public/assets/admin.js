@@ -93,10 +93,11 @@
       return { main: file, name: file.name };
     }
   }
-  async function uploadOne(file) {
+  async function uploadOne(file, label) {
     var p = file.type.indexOf('image/') === 0 ? await prepareImage(file) : { main: file, name: file.name };
     var fd = new FormData();
     fd.append('file', p.main, p.name);
+    if (label) fd.append('name', label);
     if (p.thumb) fd.append('thumb', p.thumb, 'thumb-' + p.name);
     if (p.width) fd.append('width', p.width);
     if (p.height) fd.append('height', p.height);
@@ -105,11 +106,59 @@
     if (!r.ok || !j.ok) throw new Error(j.error || 'Upload failed');
     return j.item;
   }
+  // Camera / WhatsApp file names say nothing about the photo, so don't suggest them.
+  function suggestName(file) {
+    var n = file.name.replace(/\.[^.]+$/, '').replace(/[_]+/g, ' ').replace(/\s+/g, ' ').trim();
+    if (/^(img|image|dsc|dscn|dcim|pxl|photo|screenshot|whatsapp|wa|vid|mvimg|signal)\b/i.test(n) || !/[a-z]{3}/i.test(n)) return '';
+    return n;
+  }
+  /** Ask for a name for each photo before upload. Resolves to a list of names, or null if cancelled. */
+  function nameFiles(files) {
+    var imgs = files.filter(function (f) { return f.type.indexOf('image/') === 0; });
+    if (!imgs.length) return Promise.resolve(files.map(function () { return ''; }));
+    return new Promise(function (resolve) {
+      var urls = [], inputs = new Map(), finished = false;
+      var list = h('div', { class: 'name-list' });
+      imgs.forEach(function (f, i) {
+        var u = URL.createObjectURL(f); urls.push(u);
+        var inp = h('input', { type: 'text', maxlength: 120, value: suggestName(f), placeholder: 'e.g. AC room in Perambalur', 'aria-label': 'Name for ' + f.name });
+        inputs.set(f, inp);
+        list.append(h('label', { class: 'name-row' }, h('img', { src: u, alt: '' }),
+          h('span', { class: 'name-fld' }, h('span', { class: 'muted', text: f.name }), inp)));
+      });
+      var form = h('form', { novalidate: true }, h('p', { class: 'muted', style: 'margin:0 0 12px' },
+        'Describe what is in the photo, with the place name — for example “AC room in Perambalur” or “VP Residency reception”. Google reads this name, and it becomes the photo’s web address.'), list);
+      var sameBtn = imgs.length > 1 ? h('button', { type: 'button', class: 'btn btn-ghost btn-sm', style: 'margin-right:auto', onclick: function () {
+        var first = inputs.get(imgs[0]).value.trim();
+        if (!first) { inputs.get(imgs[0]).focus(); return; }
+        imgs.forEach(function (f) { inputs.get(f).value = first; });
+      } }, 'Use the first name for all') : null;
+      var m = modal(imgs.length > 1 ? 'Name your ' + imgs.length + ' photos' : 'Name your photo', form,
+        [sameBtn, h('button', { type: 'button', class: 'btn btn-ghost', onclick: function () { done(null); } }, 'Cancel'),
+          h('button', { type: 'button', class: 'btn btn-primary', onclick: function () { done(true); } }, icon('upload'), 'Upload')],
+        { onClose: function () { done(null); } });
+      form.addEventListener('submit', function (e) { e.preventDefault(); done(true); });
+      list.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); done(true); } });
+      // Escape cancels only this box, not the photo picker underneath it.
+      function onEsc(e) { if (e.key === 'Escape') { e.stopImmediatePropagation(); done(null); } }
+      document.addEventListener('keydown', onEsc, true);
+      function done(ok) {
+        if (finished) return; finished = true;
+        document.removeEventListener('keydown', onEsc, true);
+        var names = ok ? files.map(function (f) { var inp = inputs.get(f); return inp ? inp.value.replace(/\s+/g, ' ').trim() : ''; }) : null;
+        urls.forEach(function (u) { URL.revokeObjectURL(u); });
+        m.close(); resolve(names);
+      }
+      var first = list.querySelector('input'); if (first) first.focus();
+    });
+  }
   async function uploadFiles(files, onProgress) {
     var out = [], errors = [];
+    var names = await nameFiles(files);
+    if (!names) return out;
     for (var i = 0; i < files.length; i++) {
-      if (onProgress) onProgress(i + 1, files.length, files[i].name);
-      try { out.push(await uploadOne(files[i])); } catch (e) { errors.push(files[i].name + ': ' + e.message); }
+      if (onProgress) onProgress(i + 1, files.length, names[i] || files[i].name);
+      try { out.push(await uploadOne(files[i], names[i])); } catch (e) { errors.push(files[i].name + ': ' + e.message); }
     }
     if (errors.length) alert(errors.join('\n'));
     return out;
@@ -736,6 +785,7 @@
       $('[data-md-name]', dlg).textContent = d.name;
       $('[data-md-meta]', dlg).textContent = [d.dims, d.size, 'uploaded ' + d.date].filter(Boolean).join(' · ');
       $('[data-md-url]', dlg).value = location.origin + d.url;
+      $('[data-md-rename]', dlg).value = d.name || '';
       $('[data-md-alt]', dlg).value = d.alt || '';
       $('[data-md-alt-form]', dlg).action = '/admin/media/' + d.id + '/alt';
       $('[data-md-delete-form]', dlg).action = '/admin/media/' + d.id + '/delete';

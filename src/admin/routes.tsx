@@ -924,7 +924,12 @@ admin.post('/media/upload', async (c) => {
   const id = crypto.randomUUID();
   const d = new Date();
   const folder = { image: 'img', video: 'video', font: 'font', file: 'file' }[type.kind] || 'file';
-  const key = `${folder}/${d.getUTCFullYear()}/${String(d.getUTCMonth() + 1).padStart(2, '0')}/${id}.${type.ext}`;
+  // The owner's name for the file goes into its web address (Google reads image file names);
+  // a short random tail keeps two photos with the same name apart.
+  const label = str(body.name, 120).replace(/\s+/g, ' ').trim();
+  const fromFile = (file.name || '').replace(/\.[^.]+$/, '');
+  const slug = [label, fromFile].map((t) => slugify(t).slice(0, 60).replace(/-+$/, '')).find((t) => t && t !== 'item');
+  const key = `${folder}/${d.getUTCFullYear()}/${String(d.getUTCMonth() + 1).padStart(2, '0')}/${slug ? `${slug}-${id.slice(0, 8)}` : id}.${type.ext}`;
   const store = mediaStore(c.env);
   const data = await file.arrayBuffer();
   await store.put(key, data, type.mime);
@@ -934,12 +939,12 @@ admin.post('/media/upload', async (c) => {
     const thumbOk = thumb instanceof File && thumb.size < 4e6 && MEDIA_TYPES.find((t) => t.kind === 'image' && t.mime === type.mime)?.test(new Uint8Array(await thumb.slice(0, 16).arrayBuffer()));
     await store.put(smKey(key), thumbOk ? await (thumb as File).arrayBuffer() : data, type.mime);
   }
-  const filename = (file.name || `upload.${type.ext}`).replace(/[^\w.\- ]+/g, '').slice(0, 120) || `upload.${type.ext}`;
+  const filename = label || (file.name || `upload.${type.ext}`).replace(/[^\w.\- ]+/g, '').slice(0, 120) || `upload.${type.ext}`;
   const width = Math.min(20000, parseInt(str(body.width, 6), 10) || 0) || null;
   const height = Math.min(20000, parseInt(str(body.height, 6), 10) || 0) || null;
   await db
     .prepare('INSERT INTO media (id, key, filename, mime, kind, size, width, height, alt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
-    .bind(id, key, filename, type.mime, type.kind, file.size, width, height, str(body.alt, 200))
+    .bind(id, key, filename, type.mime, type.kind, file.size, width, height, str(body.alt, 200) || label)
     .run();
   await audit(db, c.get('user'), 'media.upload', filename, clientIp(c));
   return c.json({ ok: true, item: { id, url: `/media/${key}`, name: filename, mime: type.mime, kind: type.kind, size: file.size, width, height } });
@@ -967,6 +972,8 @@ admin.get('/api/media/:id/usage', async (c) => {
 
 admin.post('/media/:id/alt', async (c) => {
   const body = await c.req.parseBody();
+  const name = str(body.name, 120).replace(/\s+/g, ' ').trim();
+  if (name) await c.env.DB.prepare('UPDATE media SET filename = ? WHERE id = ?').bind(name, c.req.param('id')).run();
   await c.env.DB.prepare('UPDATE media SET alt = ? WHERE id = ?').bind(str(body.alt, 200), c.req.param('id')).run();
   return c.redirect(`/admin/media?kind=${encodeURIComponent(str(body.kind, 10) || 'image')}&ok=saved`, 303);
 });
@@ -1063,10 +1070,13 @@ admin.get('/media', async (c) => {
             <form method="post" data-md-alt-form>
               <input type="hidden" name="_csrf" value={ctx.csrf} />
               <input type="hidden" name="kind" value={kind} />
+              <label class="fld-label">Photo name</label>
+              <input type="text" name="name" maxlength={120} data-md-rename />
+              <p class="muted" style="font-size:.85em;margin:0 0 10px">The web address keeps the name given at upload, so pages using this photo don't break.</p>
               <label class="fld-label">Description for search engines & screen readers</label>
               <input type="text" name="alt" maxlength={200} data-md-alt />
               <button class="btn btn-primary btn-sm" type="submit">
-                Save description
+                Save
               </button>
             </form>
             <p class="muted" data-md-usage></p>

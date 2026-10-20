@@ -6,7 +6,7 @@ import type { FormSchema } from '../lib/schemas';
 import { scriptJson } from '../lib/util';
 import type { User } from '../types';
 
-export const ADMIN_ASSET_VERSION = '5';
+export const ADMIN_ASSET_VERSION = '6';
 
 type NavItem = { key: string; label: string; icon: string; href: string; owner?: boolean; badge?: boolean };
 const NAV: { group: string; items: NavItem[] }[] = [

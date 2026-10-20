@@ -13,6 +13,14 @@ export function srcSet(src: string): string | undefined {
   return `${m[1]}-sm${m[2]} 800w, ${src} 1600w`;
 }
 
+/** Named uploads look like /media/img/2026/10/ac-room-in-perambalur-3f9a1c2e.webp → "Ac room in perambalur". */
+export function altFromUrl(src: string): string {
+  const m = /^\/media\/img\/\d{4}\/\d{2}\/([a-z0-9-]+)-[0-9a-f]{8}(?:-sm)?\.[a-z0-9]+$/.exec(src || '');
+  if (!m) return '';
+  const words = m[1].replace(/-/g, ' ');
+  return words.charAt(0).toUpperCase() + words.slice(1);
+}
+
 export function Img(props: {
   src: string;
   alt?: string;
@@ -29,7 +37,7 @@ export function Img(props: {
       src={props.src}
       srcset={ss}
       sizes={ss ? props.sizes || '100vw' : undefined}
-      alt={props.alt || ''}
+      alt={props.alt || altFromUrl(props.src)}
       class={props.class}
       loading={props.eager ? 'eager' : 'lazy'}
       fetchpriority={props.eager ? 'high' : undefined}
