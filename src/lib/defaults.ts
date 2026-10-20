@@ -53,6 +53,9 @@ export const DEFAULTS = {
   booking: {
     showPrices: false,
     showCategories: false,
+    searchToWhatsapp: true,
+    searchWhatsappTemplate:
+      "Hi VP Residency, I'd like to check room availability:\n• Check-in: {checkin}\n• Check-out: {checkout}\n• Guests: {guests}\n• Room type: {type}\nPlease let me know. Thank you!",
     bookButtonText: 'Book Now',
     bookAction: 'whatsapp',
     whatsappTemplate:

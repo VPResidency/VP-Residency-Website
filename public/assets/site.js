@@ -106,6 +106,23 @@
   }
   function fill(tpl, vars) { return tpl.replace(/\{(\w+)\}/g, function (_, k) { return vars[k] !== undefined && vars[k] !== '' ? vars[k] : '—'; }); }
 
+  // Room search → WhatsApp: open a chat to the hotel with the guest's dates already typed.
+  if (cfg.searchWa) {
+    $$('form[data-search]').forEach(function (form) {
+      form.addEventListener('submit', function () {
+        var f = form.elements;
+        var ci = f.checkin ? f.checkin.value : '', co = f.checkout ? f.checkout.value : '';
+        var typeLabels = { ac: 'AC', nonac: 'Non-AC' };
+        var g = f.guests ? f.guests.value : '';
+        var text = fill(cfg.searchWa.template || '', {
+          checkin: fmt(ci) || 'Not decided', checkout: fmt(co) || 'Not decided', nights: nights(ci, co) || '',
+          guests: g ? g + (g === '1' ? ' guest' : ' guests') : '', type: (f.type && typeLabels[f.type.value]) || 'Any',
+        });
+        window.open(waUrl(cfg.searchWa.number, text), '_blank', 'noopener');
+      });
+    });
+  }
+
   $$('form').forEach(function (form) {
     var cin = $('[data-checkin]', form);
     var cout = $('[data-checkout]', form);

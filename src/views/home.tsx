@@ -99,13 +99,13 @@ function Hero({ s, festival }: HomeData) {
               <span>
                 <Icon name="calendar-days" size={16} /> Check-in
               </span>
-              <input type="date" name="checkin" min={todayIso()} data-checkin />
+              <input type="date" name="checkin" min={todayIso()} required={s.booking.searchToWhatsapp} data-checkin />
             </label>
             <label class="field">
               <span>
                 <Icon name="calendar-days" size={16} /> Check-out
               </span>
-              <input type="date" name="checkout" min={todayIso()} data-checkout />
+              <input type="date" name="checkout" min={todayIso()} required={s.booking.searchToWhatsapp} data-checkout />
             </label>
             <label class="field">
               <span>
@@ -125,8 +125,8 @@ function Hero({ s, festival }: HomeData) {
                 <option value="nonac">Non-AC</option>
               </select>
             </label>
-            <button class="btn btn-primary btn-lg search-submit" type="submit">
-              <Icon name="search" size={18} /> <span>Check availability</span>
+            <button class={`btn ${s.booking.searchToWhatsapp ? 'btn-whatsapp' : 'btn-primary'} btn-lg search-submit`} type="submit">
+              <Icon name={s.booking.searchToWhatsapp ? 'whatsapp' : 'search'} size={18} /> <span>Check availability</span>
             </button>
           </form>
         </div>

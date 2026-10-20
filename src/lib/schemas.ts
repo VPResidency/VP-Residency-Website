@@ -268,6 +268,10 @@ export const SETTINGS_FORMS: Record<SettingsKey, SettingsForm> = {
         { k: 'showPrices', t: 'toggle', label: 'Show room prices on the website', w: 'half' },
         { k: 'showCategories', t: 'toggle', label: 'Show room categories (Deluxe, Classic…)', w: 'half' },
       ] },
+      { title: 'Room search → WhatsApp', desc: 'When a guest searches for a room, WhatsApp opens with their dates and guests already typed to your number — they just tap Send.', fields: [
+        { k: 'searchToWhatsapp', t: 'toggle', label: 'Open WhatsApp when a guest searches for rooms' },
+        { k: 'searchWhatsappTemplate', t: 'textarea', label: 'Message', rows: 6, max: 800, help: 'Placeholders: {checkin} {checkout} {nights} {guests} {type}' },
+      ] },
       { title: 'Booking buttons', fields: [
         { k: 'bookButtonText', t: 'text', label: '"Book" button text', w: 'half', max: 30 },
         { k: 'bookAction', t: 'select', label: 'What the main Book button does', w: 'half', options: [

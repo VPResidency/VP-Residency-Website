@@ -9,7 +9,7 @@ import { absUrl, businessJsonLd, pageTitle, verificationCode, type Meta } from '
 import { scriptJson, telLink, waLink } from '../lib/util';
 import { bookHref } from './components';
 
-export const ASSET_VERSION = '12';
+export const ASSET_VERSION = '13';
 
 export type LayoutProps = {
   s: Settings;
@@ -86,6 +86,9 @@ export function Layout({ s, nonce, origin, meta, festival, preview, children }: 
     consent: s.cookies.enabled && !preview,
     preview: !!preview,
     parallax: s.theme.parallax,
+    searchWa: s.booking.searchToWhatsapp && (s.site.whatsapp || s.site.phone)
+      ? { number: s.site.whatsapp || s.site.phone, template: s.booking.searchWhatsappTemplate }
+      : null,
     festival: fest
       ? { id: fest.id, animation: fest.animation, density: fest.density, seconds: s.festivals.animationSeconds, popup: fest.popup && !preview }
       : null,

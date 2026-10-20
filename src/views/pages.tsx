@@ -39,11 +39,11 @@ export function RoomsPage({ s, rooms, q }: { s: Settings; rooms: Room[]; q: Room
           <form class="filter-bar" action="/rooms" method="get" data-search>
             <label class="field">
               <span>Check-in</span>
-              <input type="date" name="checkin" value={q.checkin} min={todayIso()} data-checkin />
+              <input type="date" name="checkin" value={q.checkin} min={todayIso()} required={s.booking.searchToWhatsapp} data-checkin />
             </label>
             <label class="field">
               <span>Check-out</span>
-              <input type="date" name="checkout" value={q.checkout} min={todayIso()} data-checkout />
+              <input type="date" name="checkout" value={q.checkout} min={todayIso()} required={s.booking.searchToWhatsapp} data-checkout />
             </label>
             <label class="field">
               <span>Guests</span>
@@ -69,8 +69,8 @@ export function RoomsPage({ s, rooms, q }: { s: Settings; rooms: Room[]; q: Room
                 </select>
               </label>
             ) : null}
-            <button class="btn btn-primary" type="submit">
-              <Icon name="search" size={18} /> Search
+            <button class={`btn ${s.booking.searchToWhatsapp ? 'btn-whatsapp' : 'btn-primary'}`} type="submit">
+              <Icon name={s.booking.searchToWhatsapp ? 'whatsapp' : 'search'} size={18} /> {s.booking.searchToWhatsapp ? 'Check availability' : 'Search'}
             </button>
           </form>
 
