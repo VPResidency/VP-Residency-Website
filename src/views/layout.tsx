@@ -5,7 +5,7 @@ import type { FestivalView } from '../lib/festivals';
 import { googleFontsUrl } from '../lib/fonts';
 import { Icon } from '../lib/icons';
 import { themeCss } from '../lib/content';
-import { absUrl, businessJsonLd, pageTitle, verificationCode, type Meta } from '../lib/seo';
+import { absUrl, businessJsonLd, pageTitle, verificationCode, websiteJsonLd, type Meta } from '../lib/seo';
 import { scriptJson, telLink, waLink } from '../lib/util';
 import { bookHref } from './components';
 
@@ -78,7 +78,7 @@ export function Layout({ s, nonce, origin, meta, festival, preview, children }: 
   const gv = verificationCode(s.seo.googleVerification);
   const bv = verificationCode(s.seo.bingVerification);
   const noindex = meta.noindex || !s.seo.allowIndexing;
-  const jsonLd = [businessJsonLd(s, origin), ...(meta.jsonLd || [])];
+  const jsonLd = [...(meta.path === '/' ? [websiteJsonLd(s, origin)] : []), businessJsonLd(s, origin), ...(meta.jsonLd || [])];
   const ga4 = /^G-[A-Z0-9]{4,20}$/.test(s.seo.ga4Id) ? s.seo.ga4Id : '';
   const fest = festival || null;
   const config = {

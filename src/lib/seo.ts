@@ -70,6 +70,21 @@ export function businessJsonLd(s: Settings, origin: string): object {
   return ld;
 }
 
+/** Home page only: tells Google the site's name (shown above the result) and its main address. */
+export function websiteJsonLd(s: Settings, origin: string): object {
+  const city = s.site.city || '';
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': origin + '/#website',
+    name: s.site.name,
+    alternateName: city && !s.site.name.includes(city) ? [`${s.site.name} ${city}`] : undefined,
+    url: origin + '/',
+    inLanguage: 'en-IN',
+    publisher: { '@id': origin + '/#business' },
+  };
+}
+
 export function breadcrumbJsonLd(origin: string, items: { name: string; path: string }[]): object {
   return {
     '@context': 'https://schema.org',
