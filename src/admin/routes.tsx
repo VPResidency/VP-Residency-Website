@@ -828,6 +828,7 @@ for (const ent of Object.values(ENTITIES)) {
     value.slug = slug;
     const cols = { slug, ...ent.columns(value), data: JSON.stringify(value) };
     const names = Object.keys(cols);
+    const before = id ? await db.prepare(`SELECT slug FROM ${ent.key} WHERE id = ?`).bind(id).first<{ slug: string }>() : null;
     if (id) {
       await db
         .prepare(`UPDATE ${ent.key} SET ${names.map((n) => `${n} = ?`).join(', ')}, updated_at = datetime('now') WHERE id = ?`)
@@ -840,6 +841,15 @@ for (const ent of Object.values(ENTITIES)) {
         .run();
       id = Number(res.meta.last_row_id);
     }
+    if (before && before.slug !== slug) {
+      // New web address: the old one (and anything that already pointed to it) now redirects here.
+      const from = ent.publicPath(before.slug), to = ent.publicPath(slug);
+      await db.batch([
+        db.prepare('UPDATE redirects SET to_path = ? WHERE to_path = ?').bind(to, from),
+        db.prepare('INSERT OR REPLACE INTO redirects (from_path, to_path) VALUES (?, ?)').bind(from, to),
+        db.prepare('DELETE FROM redirects WHERE from_path = ?').bind(to),
+      ]);
+    }
     await audit(db, c.get('user'), `${ent.singular}.save`, String(value[ent.nameField]), clientIp(c));
     return c.redirect(`/admin${base}/${id}?ok=saved`, 303);
   };
@@ -851,6 +861,7 @@ for (const ent of Object.values(ENTITIES)) {
     const id = Number(c.req.param('id'));
     const row = await c.env.DB.prepare(`SELECT slug FROM ${ent.key} WHERE id = ?`).bind(id).first<{ slug: string }>();
     await c.env.DB.prepare(`DELETE FROM ${ent.key} WHERE id = ?`).bind(id).run();
+    if (row) await c.env.DB.prepare('DELETE FROM redirects WHERE to_path = ?').bind(ent.publicPath(row.slug)).run();
     await audit(c.env.DB, c.get('user'), `${ent.singular}.delete`, row?.slug || String(id), clientIp(c));
     return c.redirect(`/admin${base}?ok=deleted`, 303);
   });

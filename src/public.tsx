@@ -30,7 +30,12 @@ export function renderPage(c: Context<AppEnv>, meta: Meta, body: Child, status: 
   return c.html(html, status);
 }
 
-export function notFound(c: Context<AppEnv>) {
+export async function notFound(c: Context<AppEnv>) {
+  // An old address of a room, post or page that was renamed: send visitors and Google to the new one.
+  if (c.req.method === 'GET' || c.req.method === 'HEAD') {
+    const hit = await c.env.DB.prepare('SELECT to_path FROM redirects WHERE from_path = ?').bind(c.req.path).first<{ to_path: string }>().catch(() => null);
+    if (hit && hit.to_path !== c.req.path) return c.redirect(hit.to_path + new URL(c.req.url).search, 301);
+  }
   return renderPage(c, { title: 'Page not found', path: c.req.path, noindex: true }, <NotFoundPage s={c.get('s')} />, 404);
 }
 
